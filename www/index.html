@@ -240,79 +240,79 @@
         num: "المقدمة",
         title: "مقدمة: مدرسة الهاكر الثانوية",
         summary: "دليل شامل يعرّف بالمشروع ويلخص الدروس مع مسرد للمصطلحات.",
-        file: "intro.html"
+        file: "مدرسة الهاكر الثانوية - الوعي الأمني للمراهقين.html"
       },
       {
         num: "الكتاب 1",
         title: "أن تكون هاكر",
         summary: "مهارات التعلّم والبحث ومصادر المعرفة الموثوقة.",
-        file: "lesson1.html"
+        file: "الدرس 1_ان تكون هاكر - مدرسة الهاكر الثانوية.html"
       },
       {
         num: "الكتاب 2",
         title: "الأوامر الأساسية في لينكس وويندوز",
         summary: "نافذة الأوامر والطرفية وأهم أوامرها.",
-        file: "lesson2.html"
+        file: "الدرس 2_الأوامر الأساسية في لينكس وويندوز - مدرسة الهاكر الثانوية.html"
       },
       {
         num: "الكتاب 3",
         title: "المنافذ والبروتوكولات",
         summary: "نموذج TCP/IP وعناوين IP والمنافذ.",
-        file: "lesson3.html"
+        file: "الدرس 3_المنافذ والبروتوكولات - مدرسة الهاكر الثانوية.html"
       },
       {
         num: "الكتاب 4",
         title: "الخدمات والاتصالات",
         summary: "الويب والبريد وDNS وFTP وطرق الاتصال.",
-        file: "lesson4.html"
+        file: "الدرس 4_الخدمات والاتصالات - مدرسة الهاكر الثانوية.html"
       },
       {
         num: "الكتاب 5",
         title: "تحديد هوية الأنظمة",
         summary: "Whois وping وفحص المنافذ على جهازك.",
-        file: "lesson5.html"
+        file: "الدرس 5_تحديد هوية الأنظمة - مدرسة الهاكر الثانوية.html"
       },
       {
         num: "الكتاب 6",
         title: "البرمجيات الخبيثة",
         summary: "الفيروسات والديدان وأحصنة طروادة وطرق الدفاع.",
-        file: "lesson6.html"
+        file: "الدرس 6_البرمجيات الخبيثة - مدرسة الهاكر الثانوية.html"
       },
       {
         num: "الكتاب 7",
         title: "تحليل الهجمات",
         summary: "Netstat وكشف التسلل وأنظمة الطُعم.",
-        file: "lesson7.html"
+        file: "الدرس 7_تحليل الهجمات - مدرسة الهاكر الثانوية.html"
       },
       {
         num: "الكتاب 8",
         title: "الأدلة الجنائية الرقمية",
         summary: "جمع الأدلة وتحليلها وحفظ سلسلة الحيازة.",
-        file: "lesson8.html"
+        file: "الدرس 8_الأدلة الجنائية الرقمية - مدرسة الهاكر الثانوية.html"
       },
       {
         num: "الكتاب 9",
         title: "أمان البريد الإلكتروني",
         summary: "التصيّد والاحتيال والإرسال والاستلام الآمن.",
-        file: "lesson9.html"
+        file: "الدرس 9_أمان البريد الإلكتروني - مدرسة الهاكر الثانوية.html"
       },
       {
         num: "الكتاب 10",
         title: "أمان الويب والخصوصية",
         summary: "ثغرات الويب وSSL وحماية الخصوصية.",
-        file: "lesson10.html"
+        file: "الدرس 10_أمان الويب والخصوصية - مدرسة الهاكر الثانوية.html"
       },
       {
         num: "الكتاب 11",
         title: "كلمات المرور",
         summary: "بناء كلمات قوية وطرق الحماية.",
-        file: "lesson11.html"
+        file: "الدرس 11_كلمات المرور - مدرسة الهاكر الثانوية.html"
       },
       {
         num: "الكتاب 12",
         title: "القانون والأخلاق",
         summary: "جرائم المعلوماتية والاختراق الأخلاقي.",
-        file: "lesson12.html"
+        file: "الدرس 12_القوانين والأخلاقيات المتعلقة بالإنترنت - مدرسة الهاكر الثانوية.html"
       }
     ];
 
@@ -326,7 +326,7 @@
     const openExternalBtn = document.getElementById("openExternalBtn");
 
     function getLessonPath(book) {
-      return `${LESSONS_DIR}/${book.file}`;
+      return `${LESSONS_DIR}/${encodeURIComponent(book.file)}`;
     }
 
     function renderBooks(filter = "") {
@@ -375,7 +375,7 @@
           fallbackBox.style.display = "block";
           fallbackBox.innerHTML = `
             <strong>تنبيه:</strong> تعذّر العثور على الملف <code>${book.file}</code> داخل مجلد <code>${LESSONS_DIR}/</code>.
-            تأكد من رفع الملف بنفس الاسم داخل <code>www/${LESSONS_DIR}/</code> في مستودع GitHub.
+            تأكد من رفع ملف الـ HTML بنفس الاسم داخل <code>www/${LESSONS_DIR}/</code> في مستودع GitHub.
             <br /><br />
             <strong>نبذة عن الكتاب:</strong> ${book.summary}
           `;
