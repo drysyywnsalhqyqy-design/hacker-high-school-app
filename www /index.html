@@ -233,8 +233,10 @@
         <button id="closeModal" style="flex:none;width:auto;padding:7px 12px;background:#F3F4F6;border-color:#D1D5DB;">إغلاق</button>
       </div>
       <div class="info-box" id="modalBody"></div>
+      <textarea id="bookTextBox" readonly style="width:100%;min-height:150px;padding:10px;border:1px solid #D1D5DB;border-radius:8px;font-family:inherit;font-size:13.5px;background:#FAFAFA;"></textarea>
       <div class="actions">
-        <button class="btn-dl" id="modalDownloadBtn">تحميل ملخص الكتاب (.txt)</button>
+        <button class="btn-read" id="copyBookBtn">نسخ محتوى الكتاب</button>
+        <button class="btn-dl" id="modalDownloadBtn">حفظ / تحضير النص</button>
       </div>
     </div>
   </div>
@@ -344,6 +346,8 @@
     const modalTag = document.getElementById("modalTag");
     const modalTitle = document.getElementById("modalTitle");
     const modalBody = document.getElementById("modalBody");
+    const bookTextBox = document.getElementById("bookTextBox");
+    const copyBookBtn = document.getElementById("copyBookBtn");
     const modalDownloadBtn = document.getElementById("modalDownloadBtn");
     const toast = document.getElementById("toast");
 
@@ -354,6 +358,16 @@
       toast.classList.add("show");
       clearTimeout(window._toastTimer);
       window._toastTimer = setTimeout(() => toast.classList.remove("show"), 3200);
+    }
+
+    function buildBookText(book) {
+      return [
+        `${book.num}: ${book.title}`,
+        `الملخص: ${book.summary}`,
+        `المحتوى: ${book.details}`,
+        `ملف المرجع: ${BOOKS_DIR}/${book.file}`,
+        `المصدر: مدرسة الهاكر الثانوية (ISECOM)`
+      ].join("\n\n");
     }
 
     function renderBooks(filter = "") {
@@ -392,21 +406,37 @@
         <p style="margin-top:8px;"><strong>محتوى الكتاب:</strong> ${book.details}</p>
         <p style="margin-top:10px;font-size:12.5px;color:#116B43;">ملف المرجع في المشروع: ${BOOKS_DIR}/${book.file}</p>
       `;
+      bookTextBox.value = buildBookText(book);
       modalBackdrop.classList.add("open");
     };
 
     window.downloadBook = function(index) {
       const book = BOOKS[index];
       if (!book) return;
-      const content = [
-        `${book.num}: ${book.title}`,
-        `الملخص: ${book.summary}`,
-        `المحتوى: ${book.details}`,
-        `المصدر: مشروع مدرسة الهاكر الثانوية (ISECOM)`
-      ].join("\n\n");
+      openBook(index);
+      const text = buildBookText(book);
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text)
+          .then(() => showToast(`تم نسخ محتوى "${book.title}" إلى الحافظة`))
+          .catch(() => showToast(`تم عرض محتوى "${book.title}" للنسخ`));
+      } else {
+        bookTextBox.focus();
+        bookTextBox.select();
+        showToast(`تم عرض محتوى "${book.title}" للنسخ`);
+      }
+    };
 
+    copyBookBtn.addEventListener("click", () => {
+      const book = BOOKS[currentBookIndex];
+      if (!book) return;
+      downloadBook(currentBookIndex);
+    });
+
+    modalDownloadBtn.addEventListener("click", () => {
+      const book = BOOKS[currentBookIndex];
+      if (!book) return;
       try {
-        const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+        const blob = new Blob([buildBookText(book)], { type: "text/plain;charset=utf-8" });
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
@@ -415,13 +445,10 @@
         a.click();
         a.remove();
         setTimeout(() => URL.revokeObjectURL(url), 1500);
-        showToast(`تم تجهيز تحميل: ${book.title}`);
-      } catch (e) {
-        showToast("تعذّر تشغيل التحميل المباشر على هذا الجهاز");
-      }
-    };
+      } catch (e) {}
+      showToast("تم تجهيز النص في المربع أعلاه ونسخه");
+    });
 
-    modalDownloadBtn.addEventListener("click", () => downloadBook(currentBookIndex));
     document.getElementById("closeModal").addEventListener("click", () => modalBackdrop.classList.remove("open"));
     modalBackdrop.addEventListener("click", (e) => {
       if (e.target === modalBackdrop) modalBackdrop.classList.remove("open");
