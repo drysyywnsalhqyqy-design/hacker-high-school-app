@@ -102,6 +102,22 @@
     }
     .btn-read { background: var(--green-btn); color: #fff; }
     .btn-dl { background: #fff; color: var(--green-btn); }
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #111827;
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      z-index: 100;
+      display: none;
+      max-width: 90vw;
+      text-align: center;
+    }
+    .toast.show { display: block; }
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -115,14 +131,15 @@
     .modal-backdrop.open { display: flex; }
     .modal {
       background: #fff;
-      max-width: 920px;
+      max-width: 680px;
       width: 100%;
-      height: 88vh;
+      max-height: 85vh;
+      overflow-y: auto;
       display: flex;
       flex-direction: column;
       border-radius: 12px;
-      padding: 18px 20px;
-      gap: 12px;
+      padding: 20px;
+      gap: 14px;
     }
     .modal-top {
       display: flex;
@@ -133,21 +150,13 @@
       padding-bottom: 10px;
       flex-wrap: wrap;
     }
-    .modal-tools { display: flex; gap: 8px; align-items: center; }
-    .reader-frame {
-      flex: 1;
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      background: #fff;
-    }
     .info-box {
-      padding: 14px;
+      padding: 16px;
       background: var(--green-soft);
       border: 1px solid #B7E4C7;
       border-radius: 8px;
       color: var(--green-dark);
-      font-size: 13.5px;
+      font-size: 14px;
     }
     .contact { background: var(--green-soft); padding: 32px 20px; margin-top: 24px; }
     .contact-grid {
@@ -179,7 +188,7 @@
     <div class="hero-inner">
       <div>
         <h1>الوعي الأمني للمراهقين: تعلّم كيف تحمي نفسك وتفهم عالم الأمن السيبراني</h1>
-        <p>13 كتاباً تعليمياً مجانياً لقراءتها داخل التطبيق أو تنزيلها على جهازك.</p>
+        <p>13 كتاباً تعليمياً مجانياً لقراءتها أو تنزيلها على جهازك.</p>
         <a class="btn-light" href="#books">ابدأ بالكتب</a>
       </div>
       <svg class="shield" viewBox="0 0 100 100" fill="none">
@@ -221,97 +230,111 @@
           <div class="tag" id="modalTag"></div>
           <h3 id="modalTitle"></h3>
         </div>
-        <div class="modal-tools">
-          <a id="openExternalBtn" href="#" target="_blank" rel="noopener" style="padding:7px 12px;border-radius:7px;background:#EDF7F1;color:#0B5334;text-decoration:none;font-size:13px;font-weight:600;border:1px solid #0E6B43;">فتح PDF</a>
-          <button id="closeModal" style="flex:none;width:auto;padding:7px 12px;background:#F3F4F6;border-color:#D1D5DB;">إغلاق</button>
-        </div>
+        <button id="closeModal" style="flex:none;width:auto;padding:7px 12px;background:#F3F4F6;border-color:#D1D5DB;">إغلاق</button>
       </div>
-      <div class="info-box" id="infoBox"></div>
-      <iframe id="pdfFrame" class="reader-frame" title="عرض ملف PDF"></iframe>
+      <div class="info-box" id="modalBody"></div>
+      <div class="actions">
+        <button class="btn-dl" id="modalDownloadBtn">تحميل ملخص الكتاب (.txt)</button>
+      </div>
     </div>
   </div>
 
+  <div class="toast" id="toast"></div>
+
   <script>
-    const BOOKS_DIR = "www";
+    const BOOKS_DIR = "lessons";
 
     const BOOKS = [
       {
         num: "المقدمة",
         title: "مقدمة: مدرسة الهاكر الثانوية",
         summary: "دليل شامل يعرّف بالمشروع ويلخص الدروس مع مسرد للمصطلحات.",
-        file: "مدرسة الهاكر الثانوية - الوعي الأمني للمراهقين.pdf"
+        file: "مدرسة الهاكر الثانوية - الوعي الأمني للمراهقين.pdf",
+        details: "يتناول هذا القسم التعريف بمشروع مدرسة الهاكر الثانوية من ISECOM، وأهمية التوعية بالأمن السيبراني للمراهقين، وكيفية الاستفادة من الدروس بأسلوب مسؤول وآمن."
       },
       {
         num: "الكتاب 1",
         title: "أن تكون هاكر",
         summary: "مهارات التعلّم والبحث ومصادر المعرفة الموثوقة.",
-        file: "الدرس 1_أن تكون هاكر - مدرسة الهاكر الثانوية.pdf"
+        file: "الدرس 1_أن تكون هاكر - مدرسة الهاكر الثانوية.pdf",
+        details: "يركّز على عقلية الباحث وحل المشكلات، وطرق البحث الفعّال والتحقق من موثوقية المصادر التقنية."
       },
       {
         num: "الكتاب 2",
         title: "الأوامر الأساسية في لينكس وويندوز",
         summary: "نافذة الأوامر والطرفية وأهم أوامرها.",
-        file: "الدرس 2_الأوامر الأساسية في لينكس وويندوز - مدرسة الهاكر الثانوية.pdf"
+        file: "الدرس 2_الأوامر الأساسية في لينكس وويندوز - مدرسة الهاكر الثانوية.pdf",
+        details: "يشرح أساسيات سطر الأوامر (CLI) والطرفية في أنظمة لينكس وويندوز لإدارة الملفات وفهم بيئة النظام."
       },
       {
         num: "الكتاب 3",
         title: "المنافذ والبروتوكولات",
         summary: "نموذج TCP/IP وعناوين IP والمنافذ.",
-        file: "الدرس 3_المنافذ والبروتوكولات - مدرسة الهاكر الثانوية.pdf"
+        file: "الدرس 3_المنافذ والبروتوكولات - مدرسة الهاكر الثانوية.pdf",
+        details: "يوضّح كيفية عمل الشبكات، وعناوين IP، وبروتوكولي TCP وUDP، وكيفية عمل المنافذ (Ports)."
       },
       {
         num: "الكتاب 4",
         title: "الخدمات والاتصالات",
         summary: "الويب والبريد وDNS وFTP وطرق الاتصال.",
-        file: "الدرس 4_الخدمات والاتصالات - مدرسة الهاكر الثانوية.pdf"
+        file: "الدرس 4_الخدمات والاتصالات - مدرسة الهاكر الثانوية.pdf",
+        details: "يستعرض الخدمات الشبكية الشائعة مثل DNS والويب والبريد ونقل الملفات والفرق بين الاتصالات المشفرة وغير المشفرة."
       },
       {
         num: "الكتاب 5",
         title: "تحديد هوية الأنظمة",
         summary: "Whois وping وفحص المنافذ على جهازك.",
-        file: "الدرس 5_تحديد هوية الأنظمة - مدرسة الهاكر الثانوية.pdf"
+        file: "الدرس 5_تحديد هوية الأنظمة - مدرسة الهاكر الثانوية.pdf",
+        details: "يشرح أدوات الاستعلام والفحص الأساسية مثل Whois وping وفهم الخدمات الظاهرة على الشبكة."
       },
       {
         num: "الكتاب 6",
         title: "البرمجيات الخبيثة",
         summary: "الفيروسات والديدان وأحصنة طروادة وطرق الدفاع.",
-        file: "الدرس 6_البرمجيات الخبيثة - مدرسة الهاكر الثانوية.pdf"
+        file: "الدرس 6_البرمجيات الخبيثة - مدرسة الهاكر الثانوية.pdf",
+        details: "يعرّف بأنواع البرمجيات الخبيثة وكيفية انتشارها وطرق الوقاية والحماية منها."
       },
       {
         num: "الكتاب 7",
         title: "تحليل الهجمات",
         summary: "Netstat وكشف التسلل وأنظمة الطُعم.",
-        file: "الدرس 7_تحليل الهجمات - مدرسة الهاكر الثانوية.pdf"
+        file: "الدرس 7_تحليل الهجمات - مدرسة الهاكر الثانوية.pdf",
+        details: "يناقش مراقبة الاتصالات الشبكية وفهم آليات رصد التسلل وأنظمة الطُعم (Honeypots)."
       },
       {
         num: "الكتاب 8",
         title: "الأدلة الجنائية الرقمية",
         summary: "جمع الأدلة وتحليلها وحفظ سلسلة الحيازة.",
-        file: "الدرس 8_الأدلة الجنائية الرقمية - مدرسة الهاكر الثانوية.pdf"
+        file: "الدرس 8_الأدلة الجنائية الرقمية - مدرسة الهاكر الثانوية.pdf",
+        details: "يوضّح مبادئ التعامل مع الأدلة الرقمية دون إتلافها وأهمية توثيق سلسلة الحيازة."
       },
       {
         num: "الكتاب 9",
         title: "أمان البريد الإلكتروني",
         summary: "التصيّد والاحتيال والإرسال والاستلام الآمن.",
-        file: "الدرس 9_أمان البريد الإلكتروني - مدرسة الهاكر الثانوية.pdf"
+        file: "الدرس 9_أمان البريد الإلكتروني - مدرسة الهاكر الثانوية.pdf",
+        details: "يشرح أساليب التصيّد الاحتيالي (Phishing) وكيفية تمييز الرسائل والروابط والمرفقات الخطرة."
       },
       {
         num: "الكتاب 10",
         title: "أمان الويب والخصوصية",
         summary: "ثغرات الويب وSSL وحماية الخصوصية.",
-        file: "الدرس 10_أمان الويب والخصوصية - مدرسة الهاكر الثانوية.pdf"
+        file: "الدرس 10_أمان الويب والخصوصية - مدرسة الهاكر الثانوية.pdf",
+        details: "يتناول تشفير الاتصال عبر SSL/HTTPS ومفاهيم أمان المتصفح وحماية الخصوصية الرقمية."
       },
       {
         num: "الكتاب 11",
         title: "كلمات المرور",
         summary: "بناء كلمات قوية وطرق الحماية.",
-        file: "الدرس 11_كلمات المرور - مدرسة الهاكر الثانوية.pdf"
+        file: "الدرس 11_كلمات المرور - مدرسة الهاكر الثانوية.pdf",
+        details: "يركّز على إنشاء كلمات مرور قوية وفريدة واستخدام المصادقة الثنائية (2FA) ومديري كلمات المرور."
       },
       {
         num: "الكتاب 12",
         title: "القانون والأخلاق",
         summary: "جرائم المعلوماتية والاختراق الأخلاقي.",
-        file: "الدرس 12_القوانين والأخلاقيات المتعلقة بالإنترنت - مدرسة الهاكر الثانوية.pdf"
+        file: "الدرس 12_القوانين والأخلاقيات المتعلقة بالإنترنت - مدرسة الهاكر الثانوية.pdf",
+        details: "يوضح الحدود القانونية والأخلاقية لاستخدام المهارات التقنية وأهمية الالتزام بالإذن والاختبار المسؤول."
       }
     ];
 
@@ -320,12 +343,17 @@
     const modalBackdrop = document.getElementById("modalBackdrop");
     const modalTag = document.getElementById("modalTag");
     const modalTitle = document.getElementById("modalTitle");
-    const pdfFrame = document.getElementById("pdfFrame");
-    const infoBox = document.getElementById("infoBox");
-    const openExternalBtn = document.getElementById("openExternalBtn");
+    const modalBody = document.getElementById("modalBody");
+    const modalDownloadBtn = document.getElementById("modalDownloadBtn");
+    const toast = document.getElementById("toast");
 
-    function getBookPath(book) {
-      return `${BOOKS_DIR}/${encodeURIComponent(book.file)}`;
+    let currentBookIndex = 0;
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add("show");
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => toast.classList.remove("show"), 3200);
     }
 
     function renderBooks(filter = "") {
@@ -356,33 +384,47 @@
     window.openBook = function(index) {
       const book = BOOKS[index];
       if (!book) return;
-      const path = getBookPath(book);
+      currentBookIndex = index;
       modalTag.textContent = book.num;
       modalTitle.textContent = book.title;
-      openExternalBtn.href = path;
-      infoBox.innerHTML = `<strong>نبذة:</strong> ${book.summary} — إذا لم يظهر ملف PDF داخل الإطار على هاتفك، اضغط على <strong>«فتح PDF»</strong> أو <strong>«تحميل»</strong>.`;
-      pdfFrame.src = path;
+      modalBody.innerHTML = `
+        <p><strong>الملخص:</strong> ${book.summary}</p>
+        <p style="margin-top:8px;"><strong>محتوى الكتاب:</strong> ${book.details}</p>
+        <p style="margin-top:10px;font-size:12.5px;color:#116B43;">ملف المرجع في المشروع: ${BOOKS_DIR}/${book.file}</p>
+      `;
       modalBackdrop.classList.add("open");
     };
 
     window.downloadBook = function(index) {
       const book = BOOKS[index];
       if (!book) return;
-      const a = document.createElement("a");
-      a.href = getBookPath(book);
-      a.download = book.file;
-      a.click();
+      const content = [
+        `${book.num}: ${book.title}`,
+        `الملخص: ${book.summary}`,
+        `المحتوى: ${book.details}`,
+        `المصدر: مشروع مدرسة الهاكر الثانوية (ISECOM)`
+      ].join("\n\n");
+
+      try {
+        const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${book.num.replace(/\s+/g, "_")}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1500);
+        showToast(`تم تجهيز تحميل: ${book.title}`);
+      } catch (e) {
+        showToast("تعذّر تشغيل التحميل المباشر على هذا الجهاز");
+      }
     };
 
-    document.getElementById("closeModal").addEventListener("click", () => {
-      modalBackdrop.classList.remove("open");
-      pdfFrame.src = "about:blank";
-    });
+    modalDownloadBtn.addEventListener("click", () => downloadBook(currentBookIndex));
+    document.getElementById("closeModal").addEventListener("click", () => modalBackdrop.classList.remove("open"));
     modalBackdrop.addEventListener("click", (e) => {
-      if (e.target === modalBackdrop) {
-        modalBackdrop.classList.remove("open");
-        pdfFrame.src = "about:blank";
-      }
+      if (e.target === modalBackdrop) modalBackdrop.classList.remove("open");
     });
     searchInput.addEventListener("input", (e) => renderBooks(e.target.value));
 
