@@ -90,15 +90,20 @@
     .tag { font-size: 12px; color: var(--green-btn); font-weight: 700; }
     .card h3 { font-size: 17px; margin: 4px 0; }
     .card p { font-size: 13.5px; color: var(--text-muted); }
-    .actions { display: flex; gap: 8px; }
-    button {
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    button, a.action-btn {
       flex: 1;
+      text-align: center;
+      text-decoration: none;
       padding: 9px 12px;
       border-radius: 7px;
       border: 1px solid var(--green-btn);
       cursor: pointer;
       font-weight: 600;
       font-size: 13.5px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
     .btn-read { background: var(--green-btn); color: #fff; }
     .btn-dl { background: #fff; color: var(--green-btn); }
@@ -131,9 +136,9 @@
     .modal-backdrop.open { display: flex; }
     .modal {
       background: #fff;
-      max-width: 680px;
+      max-width: 760px;
       width: 100%;
-      max-height: 85vh;
+      max-height: 88vh;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
@@ -157,6 +162,13 @@
       border-radius: 8px;
       color: var(--green-dark);
       font-size: 14px;
+    }
+    .pdf-frame {
+      width: 100%;
+      height: 360px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
     }
     .contact { background: var(--green-soft); padding: 32px 20px; margin-top: 24px; }
     .contact-grid {
@@ -188,7 +200,7 @@
     <div class="hero-inner">
       <div>
         <h1>الوعي الأمني للمراهقين: تعلّم كيف تحمي نفسك وتفهم عالم الأمن السيبراني</h1>
-        <p>13 كتاباً تعليمياً مجانياً لقراءتها أو تنزيلها على جهازك.</p>
+        <p>13 كتاباً تعليمياً مجانياً لاستعراضها أو تحميلها على جهازك.</p>
         <a class="btn-light" href="#books">ابدأ بالكتب</a>
       </div>
       <svg class="shield" viewBox="0 0 100 100" fill="none">
@@ -233,10 +245,10 @@
         <button id="closeModal" style="flex:none;width:auto;padding:7px 12px;background:#F3F4F6;border-color:#D1D5DB;">إغلاق</button>
       </div>
       <div class="info-box" id="modalBody"></div>
-      <textarea id="bookTextBox" readonly style="width:100%;min-height:150px;padding:10px;border:1px solid #D1D5DB;border-radius:8px;font-family:inherit;font-size:13.5px;background:#FAFAFA;"></textarea>
+      <iframe class="pdf-frame" id="modalPdfFrame" title="استعراض الكتاب"></iframe>
       <div class="actions">
-        <button class="btn-read" id="copyBookBtn">نسخ محتوى الكتاب</button>
-        <button class="btn-dl" id="modalDownloadBtn">حفظ / تحضير النص</button>
+        <a class="action-btn btn-read" id="modalOpenDirect" target="_blank" rel="noopener">فتح الكتاب</a>
+        <a class="action-btn btn-dl" id="modalDownloadDirect" download>تحميل الكتاب</a>
       </div>
     </div>
   </div>
@@ -346,12 +358,10 @@
     const modalTag = document.getElementById("modalTag");
     const modalTitle = document.getElementById("modalTitle");
     const modalBody = document.getElementById("modalBody");
-    const bookTextBox = document.getElementById("bookTextBox");
-    const copyBookBtn = document.getElementById("copyBookBtn");
-    const modalDownloadBtn = document.getElementById("modalDownloadBtn");
+    const modalPdfFrame = document.getElementById("modalPdfFrame");
+    const modalOpenDirect = document.getElementById("modalOpenDirect");
+    const modalDownloadDirect = document.getElementById("modalDownloadDirect");
     const toast = document.getElementById("toast");
-
-    let currentBookIndex = 0;
 
     function showToast(msg) {
       toast.textContent = msg;
@@ -360,14 +370,8 @@
       window._toastTimer = setTimeout(() => toast.classList.remove("show"), 3200);
     }
 
-    function buildBookText(book) {
-      return [
-        `${book.num}: ${book.title}`,
-        `الملخص: ${book.summary}`,
-        `المحتوى: ${book.details}`,
-        `ملف المرجع: ${BOOKS_DIR}/${book.file}`,
-        `المصدر: مدرسة الهاكر الثانوية (ISECOM)`
-      ].join("\n\n");
+    function getBookUrl(book) {
+      return `${BOOKS_DIR}/${encodeURIComponent(book.file)}`;
     }
 
     function renderBooks(filter = "") {
@@ -387,71 +391,58 @@
               <p>${b.summary}</p>
             </div>
             <div class="actions">
-              <button class="btn-read" onclick="openBook(${idx})">اطلاع</button>
-              <button class="btn-dl" onclick="downloadBook(${idx})">تحميل</button>
+              <button class="btn-read" onclick="previewBook(${idx})">استعراض الكتاب</button>
+              <button class="btn-dl" onclick="downloadBook(${idx})">تحميل الكتاب</button>
             </div>
           </article>
         `;
       }).join("");
     }
 
-    window.openBook = function(index) {
+    window.previewBook = function(index) {
       const book = BOOKS[index];
       if (!book) return;
-      currentBookIndex = index;
+      const url = getBookUrl(book);
       modalTag.textContent = book.num;
       modalTitle.textContent = book.title;
       modalBody.innerHTML = `
         <p><strong>الملخص:</strong> ${book.summary}</p>
-        <p style="margin-top:8px;"><strong>محتوى الكتاب:</strong> ${book.details}</p>
-        <p style="margin-top:10px;font-size:12.5px;color:#116B43;">ملف المرجع في المشروع: ${BOOKS_DIR}/${book.file}</p>
+        <p style="margin-top:6px;"><strong>محتوى الكتاب:</strong> ${book.details}</p>
       `;
-      bookTextBox.value = buildBookText(book);
+      modalPdfFrame.src = url;
+      modalOpenDirect.href = url;
+      modalDownloadDirect.href = url;
+      modalDownloadDirect.setAttribute("download", book.file);
       modalBackdrop.classList.add("open");
     };
 
     window.downloadBook = function(index) {
       const book = BOOKS[index];
       if (!book) return;
-      openBook(index);
-      const text = buildBookText(book);
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text)
-          .then(() => showToast(`تم نسخ محتوى "${book.title}" إلى الحافظة`))
-          .catch(() => showToast(`تم عرض محتوى "${book.title}" للنسخ`));
-      } else {
-        bookTextBox.focus();
-        bookTextBox.select();
-        showToast(`تم عرض محتوى "${book.title}" للنسخ`);
-      }
+      const url = getBookUrl(book);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = book.file;
+      a.target = "_blank";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      showToast(`جاري تحميل الكتاب: ${book.title}`);
     };
 
-    copyBookBtn.addEventListener("click", () => {
-      const book = BOOKS[currentBookIndex];
-      if (!book) return;
-      downloadBook(currentBookIndex);
+    modalDownloadDirect.addEventListener("click", () => {
+      showToast("جاري بدء تحميل الكتاب...");
     });
 
-    modalDownloadBtn.addEventListener("click", () => {
-      const book = BOOKS[currentBookIndex];
-      if (!book) return;
-      try {
-        const blob = new Blob([buildBookText(book)], { type: "text/plain;charset=utf-8" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `${book.num.replace(/\s+/g, "_")}.txt`;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        setTimeout(() => URL.revokeObjectURL(url), 1500);
-      } catch (e) {}
-      showToast("تم تجهيز النص في المربع أعلاه ونسخه");
+    document.getElementById("closeModal").addEventListener("click", () => {
+      modalBackdrop.classList.remove("open");
+      modalPdfFrame.src = "";
     });
-
-    document.getElementById("closeModal").addEventListener("click", () => modalBackdrop.classList.remove("open"));
     modalBackdrop.addEventListener("click", (e) => {
-      if (e.target === modalBackdrop) modalBackdrop.classList.remove("open");
+      if (e.target === modalBackdrop) {
+        modalBackdrop.classList.remove("open");
+        modalPdfFrame.src = "";
+      }
     });
     searchInput.addEventListener("input", (e) => renderBooks(e.target.value));
 
