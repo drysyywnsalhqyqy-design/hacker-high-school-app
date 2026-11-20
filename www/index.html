@@ -1,1799 +1,410 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مدرسة الهاكر الثانوية - الوعي الأمني للمراهقين</title>
-    <style>
-        /* ==========================================================================
-           1. الأساسيات والمتغيرات اللونية (Pure CSS - No External Dependencies)
-           ========================================================================== */
-        :root {
-            --primary-dark: #0B5334;
-            --primary-mid: #116A44;
-            --primary-hover: #083E26;
-            --primary-light: #E6F4EE;
-            --contact-bg: #EDF7F1;
-            --bg-main: #FFFFFF;
-            --bg-card: #F8FAFC;
-            --text-dark: #1A202C;
-            --text-muted: #64748B;
-            --border-color: #E2E8F0;
-            --radius-md: 12px;
-            --radius-lg: 16px;
-            --radius-xl: 20px;
-            --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.04);
-            --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
-            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.25);
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        html {
-            scroll-behavior: smooth;
-            font-family: 'Cairo', 'Tajawal', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            direction: rtl;
-        }
-
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-dark);
-            line-height: 1.65;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        button {
-            font-family: inherit;
-            cursor: pointer;
-            border: none;
-            background: none;
-        }
-
-        /* ضبط صريح لأبعاد أيقونات SVG لمنع تضخمها في أي بيئة */
-        svg {
-            display: inline-block;
-            vertical-align: middle;
-            flex-shrink: 0;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1180px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* ==========================================================================
-           2. الشريط العلوي (Navbar)
-           ========================================================================== */
-        .navbar {
-            background-color: var(--primary-dark);
-            color: #FFFFFF;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(8px);
-        }
-
-        .navbar-inner {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            height: 64px;
-            gap: 12px;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 800;
-            font-size: 1.05rem;
-            color: #FFFFFF;
-        }
-
-        .brand-icon {
-            width: 28px;
-            height: 28px;
-            background: rgba(255, 255, 255, 0.12);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .nav-links a {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 0.88rem;
-            font-weight: 600;
-            padding: 6px 12px;
-            border-radius: 8px;
-            transition: background-color 0.2s, color 0.2s;
-        }
-
-        .nav-links a:hover {
-            background-color: rgba(255, 255, 255, 0.14);
-            color: #FFFFFF;
-        }
-
-        /* ==========================================================================
-           3. القسم الرئيسي (Hero Section with CSS Grid Pattern)
-           ========================================================================== */
-        .hero {
-            background-color: var(--primary-dark);
-            background-image: 
-                linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-            background-size: 28px 28px;
-            color: #FFFFFF;
-            padding: 56px 0 64px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 40px;
-            align-items: center;
-        }
-
-        @media (min-width: 860px) {
-            .hero-grid {
-                grid-template-columns: 1.35fr 0.65fr;
-            }
-        }
-
-        .hero-content {
-            text-align: right;
-        }
-
-        .hero-title {
-            font-size: 1.9rem;
-            font-weight: 900;
-            line-height: 1.35;
-            margin-bottom: 16px;
-            color: #FFFFFF;
-        }
-
-        @media (min-width: 640px) {
-            .hero-title {
-                font-size: 2.55rem;
-            }
-        }
-
-        .hero-subtitle {
-            font-size: 1.02rem;
-            color: rgba(255, 255, 255, 0.88);
-            max-width: 580px;
-            margin-bottom: 28px;
-            line-height: 1.75;
-        }
-
-        .btn-hero {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            background-color: #FFFFFF;
-            color: var(--primary-dark);
-            font-weight: 800;
-            font-size: 0.98rem;
-            padding: 13px 28px;
-            border-radius: var(--radius-md);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
-            transition: transform 0.2s, background-color 0.2s;
-        }
-
-        .btn-hero:hover {
-            background-color: #F1F5F9;
-            transform: translateY(-2px);
-        }
-
-        .hero-stats {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 24px;
-            margin-top: 36px;
-            padding-top: 24px;
-            border-top: 1px solid rgba(255, 255, 255, 0.15);
-        }
-
-        .stat-item {
-            display: flex;
-            flex-direction: column;
-            min-width: 85px;
-        }
-
-        .stat-value {
-            font-size: 1.35rem;
-            font-weight: 900;
-            color: #FFFFFF;
-            line-height: 1.2;
-        }
-
-        .stat-label {
-            font-size: 0.82rem;
-            color: rgba(255, 255, 255, 0.78);
-            margin-top: 4px;
-        }
-
-        .stat-divider {
-            width: 1px;
-            height: 36px;
-            background-color: rgba(255, 255, 255, 0.18);
-        }
-
-        /* الدرع الأبيض في الجانب الأيسر */
-        .hero-shield-wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .shield-badge {
-            width: 170px;
-            height: 195px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.32));
-            animation: floatShield 4.5s ease-in-out infinite;
-        }
-
-        @keyframes floatShield {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-7px); }
-        }
-
-        /* ==========================================================================
-           4. قسم الكتب وشريط البحث (Books Section)
-           ========================================================================== */
-        .books-section {
-            padding: 56px 0 64px;
-            background-color: #FFFFFF;
-        }
-
-        .section-header-row {
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-            margin-bottom: 32px;
-        }
-
-        @media (min-width: 768px) {
-            .section-header-row {
-                flex-direction: row;
-                align-items: flex-end;
-                justify-content: space-between;
-            }
-        }
-
-        .section-title {
-            font-size: 1.75rem;
-            font-weight: 900;
-            color: var(--text-dark);
-        }
-
-        .section-desc {
-            font-size: 0.95rem;
-            color: var(--text-muted);
-            margin-top: 6px;
-        }
-
-        /* شريط البحث */
-        .search-box {
-            position: relative;
-            width: 100%;
-            max-width: 340px;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 11px 40px 11px 16px;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            background-color: var(--bg-card);
-            font-family: inherit;
-            font-size: 0.9rem;
-            color: var(--text-dark);
-            outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
-        }
-
-        .search-input:focus {
-            background-color: #FFFFFF;
-            border-color: var(--primary-mid);
-            box-shadow: 0 0 0 3px rgba(17, 106, 68, 0.12);
-        }
-
-        .search-icon {
-            position: absolute;
-            right: 13px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            pointer-events: none;
-        }
-
-        /* شبكة الكتب الـ 13 */
-        .books-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-        }
-
-        @media (min-width: 640px) {
-            .books-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .books-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        .book-card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            padding: 22px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            box-shadow: var(--shadow-sm);
-            transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
-        }
-
-        .book-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-md);
-            border-color: #CBD5E1;
-            background-color: #FFFFFF;
-        }
-
-        .book-card-top {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
-        .book-meta {
-            text-align: right;
-        }
-
-        .book-tag {
-            display: inline-block;
-            font-size: 0.78rem;
-            font-weight: 700;
-            color: var(--text-muted);
-            margin-bottom: 4px;
-        }
-
-        .book-title {
-            font-size: 1.12rem;
-            font-weight: 800;
-            color: var(--text-dark);
-            line-height: 1.4;
-        }
-
-        .book-icon-box {
-            width: 38px;
-            height: 38px;
-            border-radius: 10px;
-            background-color: var(--primary-light);
-            color: var(--primary-dark);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .book-desc {
-            font-size: 0.88rem;
-            color: var(--text-muted);
-            line-height: 1.65;
-            margin-bottom: 20px;
-            flex-grow: 1;
-        }
-
-        .book-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .btn-read {
-            background-color: var(--primary-mid);
-            color: #FFFFFF;
-            font-weight: 700;
-            font-size: 0.88rem;
-            padding: 10px 14px;
-            border-radius: 10px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            transition: background-color 0.2s;
-        }
-
-        .btn-read:hover {
-            background-color: var(--primary-dark);
-        }
-
-        .btn-download {
-            background-color: #FFFFFF;
-            color: var(--primary-dark);
-            border: 1px solid #CBD5E1;
-            font-weight: 700;
-            font-size: 0.88rem;
-            padding: 10px 14px;
-            border-radius: 10px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            transition: background-color 0.2s, border-color 0.2s;
-        }
-
-        .btn-download:hover {
-            background-color: var(--primary-light);
-            border-color: var(--primary-mid);
-        }
-
-        .empty-search {
-            text-align: center;
-            padding: 48px 20px;
-            background-color: var(--bg-card);
-            border-radius: var(--radius-lg);
-            border: 1px dashed #CBD5E1;
-            color: var(--text-muted);
-            display: none;
-        }
-
-        /* ==========================================================================
-           5. قسم قواعد الهاكر المسؤول (Responsible Hacker Rules)
-           ========================================================================== */
-        .rules-section {
-            padding: 48px 0 56px;
-            background-color: #FFFFFF;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .rules-wrapper {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-xl);
-            padding: 28px;
-        }
-
-        .rules-header {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            margin-bottom: 24px;
-        }
-
-        .rules-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            background-color: var(--primary-light);
-            color: var(--primary-dark);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .rules-title {
-            font-size: 1.3rem;
-            font-weight: 800;
-            color: var(--text-dark);
-        }
-
-        .rules-subtitle {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        .rules-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 16px;
-        }
-
-        @media (min-width: 768px) {
-            .rules-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        .rule-card {
-            background-color: #FFFFFF;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            padding: 18px;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .rule-card h4 {
-            color: var(--primary-dark);
-            font-size: 0.98rem;
-            font-weight: 800;
-            margin-bottom: 6px;
-        }
-
-        .rule-card p {
-            font-size: 0.86rem;
-            color: #475569;
-            line-height: 1.65;
-        }
-
-        /* ==========================================================================
-           6. قسم تواصل معنا (Contact Section - مطابق للصورة)
-           ========================================================================== */
-        .contact-section {
-            background-color: var(--contact-bg);
-            border-top: 1px solid #D1E7DD;
-            padding: 52px 0;
-        }
-
-        .contact-header {
-            text-align: right;
-            margin-bottom: 28px;
-        }
-
-        .contact-title {
-            font-size: 1.65rem;
-            font-weight: 900;
-            color: var(--text-dark);
-        }
-
-        .contact-desc {
-            font-size: 0.95rem;
-            color: var(--text-muted);
-            margin-top: 6px;
-        }
-
-        .contact-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 16px;
-        }
-
-        @media (min-width: 820px) {
-            .contact-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        .contact-card {
-            background-color: #FFFFFF;
-            border: 1px solid #DCECE4;
-            border-radius: var(--radius-lg);
-            padding: 18px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .contact-card-main {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            min-width: 0;
-        }
-
-        .contact-icon-box {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            background-color: var(--primary-light);
-            color: var(--primary-dark);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .contact-info {
-            text-align: right;
-            min-width: 0;
-        }
-
-        .contact-label {
-            display: block;
-            font-size: 0.78rem;
-            font-weight: 600;
-            color: var(--text-muted);
-        }
-
-        .contact-value {
-            display: block;
-            font-size: 0.96rem;
-            font-weight: 800;
-            color: var(--text-dark);
-            margin-top: 2px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        a.contact-value:hover {
-            color: var(--primary-mid);
-        }
-
-        .copy-btn {
-            width: 34px;
-            height: 34px;
-            border-radius: 8px;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            transition: background-color 0.2s, color 0.2s;
-        }
-
-        .copy-btn:hover {
-            background-color: var(--primary-light);
-            color: var(--primary-dark);
-        }
-
-        /* ==========================================================================
-           7. التذييل السفلي (Footer)
-           ========================================================================== */
-        .footer {
-            background-color: var(--primary-dark);
-            color: #FFFFFF;
-            padding: 36px 0;
-        }
-
-        .footer-content {
-            text-align: right;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .footer-line-1 {
-            font-size: 0.95rem;
-            color: rgba(255, 255, 255, 0.96);
-            line-height: 1.7;
-        }
-
-        .footer-line-1 a {
-            text-decoration: underline;
-            font-weight: 700;
-        }
-
-        .footer-line-2 {
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.84);
-            line-height: 1.75;
-        }
-
-        /* ==========================================================================
-           8. نافذة القراءة التفاعلية (Interactive Book Reader Modal)
-           ========================================================================== */
-        .modal-backdrop {
-            position: fixed;
-            inset: 0;
-            background-color: rgba(15, 23, 42, 0.65);
-            backdrop-filter: blur(4px);
-            z-index: 200;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-        }
-
-        .modal-backdrop.active {
-            display: flex;
-        }
-
-        .modal-dialog {
-            background-color: #FFFFFF;
-            width: 100%;
-            max-width: 780px;
-            max-height: 90vh;
-            border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-lg);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            animation: modalPop 0.22s ease-out;
-        }
-
-        @keyframes modalPop {
-            from { opacity: 0; transform: scale(0.96); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .modal-header {
-            background-color: var(--primary-dark);
-            color: #FFFFFF;
-            padding: 18px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-        }
-
-        .modal-badge {
-            font-size: 0.78rem;
-            background: rgba(255, 255, 255, 0.16);
-            padding: 3px 10px;
-            border-radius: 6px;
-            display: inline-block;
-            margin-bottom: 4px;
-        }
-
-        .modal-title {
-            font-size: 1.2rem;
-            font-weight: 800;
-        }
-
-        .modal-close {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.12);
-            color: #FFFFFF;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.2s;
-        }
-
-        .modal-close:hover {
-            background: rgba(255, 255, 255, 0.25);
-        }
-
-        .modal-body {
-            padding: 24px;
-            overflow-y: auto;
-            flex-grow: 1;
-            text-align: right;
-        }
-
-        .chapter-box {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            padding: 18px;
-            margin-bottom: 16px;
-        }
-
-        .chapter-box h4 {
-            color: var(--primary-dark);
-            font-size: 1.05rem;
-            font-weight: 800;
-            margin-bottom: 8px;
-        }
-
-        .chapter-box p {
-            font-size: 0.93rem;
-            color: #334155;
-            line-height: 1.8;
-        }
-
-        .code-snippet {
-            background-color: #0F172A;
-            color: #38BDF8;
-            font-family: Consolas, Monaco, 'Courier New', monospace;
-            direction: ltr;
-            text-align: left;
-            padding: 12px 16px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            margin-top: 10px;
-            overflow-x: auto;
-        }
-
-        /* الاختبار القصير داخل نافذة القراءة */
-        .quiz-box {
-            background-color: var(--primary-light);
-            border: 1px solid #B7E1CD;
-            border-radius: var(--radius-md);
-            padding: 18px;
-            margin-top: 20px;
-        }
-
-        .quiz-title {
-            font-weight: 800;
-            color: var(--primary-dark);
-            font-size: 0.98rem;
-            margin-bottom: 8px;
-        }
-
-        .quiz-question {
-            font-size: 0.92rem;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 12px;
-        }
-
-        .quiz-options {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .quiz-option-btn {
-            background-color: #FFFFFF;
-            border: 1px solid #CBD5E1;
-            border-radius: 8px;
-            padding: 10px 14px;
-            text-align: right;
-            font-size: 0.88rem;
-            font-weight: 600;
-            color: var(--text-dark);
-            transition: all 0.2s;
-        }
-
-        .quiz-option-btn:hover {
-            border-color: var(--primary-mid);
-            background-color: #F8FAFC;
-        }
-
-        .quiz-option-btn.correct {
-            background-color: #DCFCE7;
-            border-color: #16A34A;
-            color: #14532D;
-        }
-
-        .quiz-option-btn.wrong {
-            background-color: #FEE2E2;
-            border-color: #DC2626;
-            color: #7F1D1D;
-        }
-
-        .quiz-feedback {
-            margin-top: 10px;
-            font-size: 0.85rem;
-            font-weight: 700;
-        }
-
-        .modal-footer {
-            padding: 14px 24px;
-            background-color: var(--bg-card);
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-        }
-
-        .nav-book-btns {
-            display: flex;
-            gap: 8px;
-        }
-
-        .btn-nav-book {
-            padding: 8px 14px;
-            border-radius: 8px;
-            border: 1px solid #CBD5E1;
-            background-color: #FFFFFF;
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--text-dark);
-        }
-
-        .btn-nav-book:disabled {
-            opacity: 0.45;
-            cursor: not-allowed;
-        }
-
-        /* ==========================================================================
-           9. إشعار Toast للتأكيد
-           ========================================================================== */
-        .toast {
-            position: fixed;
-            bottom: 24px;
-            left: 24px;
-            background-color: #0F172A;
-            color: #FFFFFF;
-            padding: 12px 20px;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            z-index: 300;
-            transform: translateY(100px);
-            opacity: 0;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-        }
-
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>مدرسة الهاكر الثانوية - 13 كتاباً</title>
+  <style>
+    :root {
+      --green-dark: #0B5334;
+      --green-mid: #116B43;
+      --green-btn: #0E6B43;
+      --green-soft: #EDF7F1;
+      --bg-page: #F7FAF8;
+      --text-main: #111827;
+      --text-muted: #4B5563;
+      --border: #E5E7EB;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Tahoma, Arial, sans-serif;
+      background: var(--bg-page);
+      color: var(--text-main);
+      line-height: 1.65;
+    }
+    header {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--green-dark); }
+    .nav-links { display: flex; gap: 16px; font-size: 14px; }
+    .nav-links a { color: var(--text-main); text-decoration: none; }
+    .hero {
+      background: var(--green-dark);
+      color: #fff;
+      padding: 40px 20px;
+    }
+    .hero-inner {
+      max-width: 1050px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: 1fr 140px;
+      gap: 24px;
+      align-items: center;
+    }
+    .hero h1 { font-size: 28px; margin-bottom: 10px; }
+    .hero p { opacity: 0.92; font-size: 15px; margin-bottom: 18px; }
+    .btn-light {
+      display: inline-block;
+      background: #fff;
+      color: var(--green-dark);
+      padding: 10px 18px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .shield { width: 110px; height: 110px; }
+    .container { max-width: 1050px; margin: auto; padding: 32px 20px; }
+    .search-box {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 15px;
+      background: #fff;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 16px;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .tag { font-size: 12px; color: var(--green-btn); font-weight: 700; }
+    .card h3 { font-size: 17px; margin: 4px 0; }
+    .card p { font-size: 13.5px; color: var(--text-muted); }
+    .actions { display: flex; gap: 8px; }
+    button {
+      flex: 1;
+      padding: 9px 12px;
+      border-radius: 7px;
+      border: 1px solid var(--green-btn);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13.5px;
+    }
+    .btn-read { background: var(--green-btn); color: #fff; }
+    .btn-dl { background: #fff; color: var(--green-btn); }
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+      z-index: 50;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      background: #fff;
+      max-width: 920px;
+      width: 100%;
+      height: 88vh;
+      display: flex;
+      flex-direction: column;
+      border-radius: 12px;
+      padding: 18px 20px;
+      gap: 12px;
+    }
+    .modal-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .modal-tools { display: flex; gap: 8px; align-items: center; }
+    .reader-frame {
+      flex: 1;
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+    }
+    .fallback-box {
+      display: none;
+      padding: 16px;
+      background: #FEF9C3;
+      border: 1px solid #FDE047;
+      border-radius: 8px;
+      color: #713F12;
+      font-size: 14px;
+    }
+    .contact { background: var(--green-soft); padding: 32px 20px; margin-top: 24px; }
+    .contact-grid {
+      max-width: 1050px;
+      margin: 16px auto 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+    .c-card { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+    footer { background: var(--green-dark); color: #fff; padding: 24px 20px; font-size: 13.5px; }
+  </style>
 </head>
 <body>
-
-    <!-- ======================================================================
-         1. الشريط العلوي (Navbar)
-         ====================================================================== -->
-    <header class="navbar">
-        <div class="container navbar-inner">
-            <a href="#" class="brand">
-                <span class="brand-icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                        <polyline points="9 12 11 14 15 10"></polyline>
-                    </svg>
-                </span>
-                <span>مدرسة الهاكر الثانوية</span>
-            </a>
-
-            <nav class="nav-links">
-                <a href="#books-section">الكتب (13)</a>
-                <a href="#rules-section">قواعد الهاكر المسؤول</a>
-                <a href="#contact-section">تواصل معنا</a>
-            </nav>
-        </div>
-    </header>
-
-    <!-- ======================================================================
-         2. القسم الرئيسي (Hero Section)
-         ====================================================================== -->
-    <section class="hero">
-        <div class="container hero-grid">
-            <!-- الجانب الأيمن: العنوان والوصف والزر والإحصائيات -->
-            <div class="hero-content">
-                <h1 class="hero-title">
-                    الوعي الأمني للمراهقين: تعلّم كيف تحمي نفسك وتفهم عالم الأمن السيبراني
-                </h1>
-                <p class="hero-subtitle">
-                    13 كتاباً تعليمياً مجانياً تقرؤها على الموقع مباشرة أو تحمّل كل كتاب على حدة.
-                </p>
-                <a href="#books-section" class="btn-hero">
-                    <span>ابدأ بالكتب</span>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                        <polyline points="19 12 12 19 5 12"></polyline>
-                    </svg>
-                </a>
-
-                <div class="hero-stats">
-                    <div class="stat-item">
-                        <span class="stat-value">13</span>
-                        <span class="stat-label">كتاباً</span>
-                    </div>
-                    <div class="stat-divider"></div>
-                    <div class="stat-item">
-                        <span class="stat-value">PDF</span>
-                        <span class="stat-label">اطلاع وتحميل</span>
-                    </div>
-                    <div class="stat-divider"></div>
-                    <div class="stat-item">
-                        <span class="stat-value">مجاني</span>
-                        <span class="stat-label">للتعلم</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- الجانب الأيسر: أيقونة الدرع الأبيض وبداخله القفل الأخضر الداكن -->
-            <div class="hero-shield-wrapper">
-                <div class="shield-badge" aria-hidden="true">
-                    <svg width="165" height="190" viewBox="0 0 165 190" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <!-- جسم الدرع الأبيض -->
-                        <path d="M82.5 8L16 36V88C16 135.5 44.4 177.2 82.5 186C120.6 177.2 149 135.5 149 88V36L82.5 8Z" fill="#FFFFFF"/>
-                        <!-- إطار داخلي خفيف للدرع -->
-                        <path d="M82.5 18L26 42V88C26 129.5 50.5 166.2 82.5 174.5C114.5 166.2 139 129.5 139 88V42L82.5 18Z" stroke="#E2E8F0" stroke-width="2"/>
-                        <!-- قوس القفل الأخضر الداكن -->
-                        <path d="M62 84V69C62 57.6782 71.1782 48.5 82.5 48.5C93.8218 48.5 103 57.6782 103 69V84" stroke="#0B5334" stroke-width="10" stroke-linecap="round"/>
-                        <!-- جسم القفل الأخضر الداكن -->
-                        <rect x="52" y="81" width="61" height="50" rx="10" fill="#0B5334"/>
-                        <!-- فتحة المفتاح البيضاء -->
-                        <circle cx="82.5" cy="101" r="6" fill="#FFFFFF"/>
-                        <path d="M82.5 105V116" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/>
-                    </svg>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ======================================================================
-         3. قسم الكتب (13 كتاباً تعليمياً)
-         ====================================================================== -->
-    <main id="books-section" class="books-section">
-        <div class="container">
-            <div class="section-header-row">
-                <div>
-                    <h2 class="section-title">الكتب</h2>
-                    <p class="section-desc">اضغط «اطلاع» للقراءة على المتصفح أو «تحميل» لحفظ الكتاب على جهازك.</p>
-                </div>
-
-                <div class="search-box">
-                    <span class="search-icon">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                        </svg>
-                    </span>
-                    <input type="text" id="search-input" class="search-input" placeholder="ابحث عن كتاب أو موضوع (مثل: لينكس، كلمات المرور)...">
-                </div>
-            </div>
-
-            <!-- شبكة البطاقات الـ 13 -->
-            <div id="books-grid" class="books-grid"></div>
-
-            <!-- رسالة في حال عدم وجود نتائج بحث -->
-            <div id="empty-search" class="empty-search">
-                لا توجد كتب تطابق كلمة البحث الحالية. جرّب البحث بكلمة أخرى.
-            </div>
-        </div>
-    </main>
-
-    <!-- ======================================================================
-         4. قسم قواعد الهاكر المسؤول
-         ====================================================================== -->
-    <section id="rules-section" class="rules-section">
-        <div class="container">
-            <div class="rules-wrapper">
-                <div class="rules-header">
-                    <div class="rules-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                            <polyline points="9 12 11 14 15 10"></polyline>
-                        </svg>
-                    </div>
-                    <div>
-                        <h3 class="rules-title">قواعد الهاكر المسؤول</h3>
-                        <p class="rules-subtitle">الميثاق الأخلاقي لطلاب مدرسة الهاكر الثانوية</p>
-                    </div>
-                </div>
-
-                <div class="rules-grid">
-                    <div class="rule-card">
-                        <h4>1. لا تتجاوز الصلاحيات</h4>
-                        <p>لا تقم أبداً بفحص أو اختراق أي نظام أو شبكة أو حساب لا تملكه أو لا تملك إذناً خطياً صريحاً لاختباره.</p>
-                    </div>
-                    <div class="rule-card">
-                        <h4>2. احمِ الخصوصية والبيانات</h4>
-                        <p>المعرفة الأمنية هدفها حماية الناس والمؤسسات، وليس التجسس أو الإضرار أو كشف الأسرار الخاصة.</p>
-                    </div>
-                    <div class="rule-card">
-                        <h4>3. شارك المعرفة بإيجابية</h4>
-                        <p>استخدم ما تتعلمه في هذه الكتب لتوعية عائلتك وأصدقائك وبناء بيئة رقمية أكثر أماناً للجميع.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ======================================================================
-         5. قسم تواصل معنا (مطابق للصورة المرفقة)
-         ====================================================================== -->
-    <section id="contact-section" class="contact-section">
-        <div class="container">
-            <div class="contact-header">
-                <h2 class="contact-title">تواصل معنا</h2>
-                <p class="contact-desc">للاقتراحات أو للإبلاغ عن رابط أو كتاب لا يعمل.</p>
-            </div>
-
-            <div class="contact-grid">
-                <!-- البطاقة الأولى (يمين): الاسم -->
-                <div class="contact-card">
-                    <div class="contact-card-main">
-                        <div class="contact-icon-box">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="12" cy="7" r="4"></circle>
-                            </svg>
-                        </div>
-                        <div class="contact-info">
-                            <span class="contact-label">الاسم</span>
-                            <span class="contact-value">يونس دريسي</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- البطاقة الثانية (وسط): الهاتف -->
-                <div class="contact-card">
-                    <div class="contact-card-main">
-                        <div class="contact-icon-box">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-                            </svg>
-                        </div>
-                        <div class="contact-info">
-                            <span class="contact-label">الهاتف</span>
-                            <a href="tel:+213659105816" dir="ltr" class="contact-value">+213659105816</a>
-                        </div>
-                    </div>
-                    <button type="button" class="copy-btn" onclick="copyText('+213659105816', 'تم نسخ رقم الهاتف بنجاح')" title="نسخ رقم الهاتف">
-                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                        </svg>
-                    </button>
-                </div>
-
-                <!-- البطاقة الثالثة (يسار): البريد الإلكتروني -->
-                <div class="contact-card">
-                    <div class="contact-card-main">
-                        <div class="contact-icon-box">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                                <polyline points="22,6 12,13 2,6"></polyline>
-                            </svg>
-                        </div>
-                        <div class="contact-info">
-                            <span class="contact-label">البريد الإلكتروني</span>
-                            <a href="mailto:drysyywnsalhqyqy@gmail.com" dir="ltr" class="contact-value">drysyywnsalhqyqy@gmail.com</a>
-                        </div>
-                    </div>
-                    <button type="button" class="copy-btn" onclick="copyText('drysyywnsalhqyqy@gmail.com', 'تم نسخ البريد الإلكتروني بنجاح')" title="نسخ البريد الإلكتروني">
-                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ======================================================================
-         6. التذييل السفلي (Footer)
-         ====================================================================== -->
-    <footer class="footer">
-        <div class="container footer-content">
-            <p class="footer-line-1">
-                <strong>مدرسة الهاكر الثانوية</strong> - مواد تعليمية من مشروع 
-                <a href="https://www.hackerhighschool.org" target="_blank" rel="noopener noreferrer">ISECOM (hackerhighschool.org)</a>.
-            </p>
-            <p class="footer-line-2">
-                المواد مفتوحة للاستخدام غير التجاري مع طلاب المدارس والتعليم المنزلي، ويمنع بيعها أو تقديمها في دورات مدفوعة دون ترخيص. المشروع تعليمي ولا يتحمل المسؤولية عن إساءة استخدام المعلومات.
-            </p>
-        </div>
-    </footer>
-
-    <!-- ======================================================================
-         7. نافذة القراءة التفاعلية (Reader Modal)
-         ====================================================================== -->
-    <div id="reader-modal" class="modal-backdrop" role="dialog" aria-modal="true">
-        <div class="modal-dialog">
-            <div class="modal-header">
-                <div>
-                    <span id="modal-tag" class="modal-badge">المقدمة</span>
-                    <h3 id="modal-title" class="modal-title">عنوان الكتاب</h3>
-                </div>
-                <button type="button" class="modal-close" onclick="closeReader()" aria-label="إغلاق">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                </button>
-            </div>
-
-            <div id="modal-body" class="modal-body"></div>
-
-            <div class="modal-footer">
-                <div class="nav-book-btns">
-                    <button type="button" id="prev-book-btn" class="btn-nav-book" onclick="navigateBook(-1)">الكتاب السابق</button>
-                    <button type="button" id="next-book-btn" class="btn-nav-book" onclick="navigateBook(1)">الكتاب التالي</button>
-                </div>
-                <button type="button" id="modal-download-btn" class="btn-read">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                        <polyline points="7 10 12 15 17 10"></polyline>
-                        <line x1="12" y1="15" x2="12" y2="3"></line>
-                    </svg>
-                    <span>تحميل نسخة الكتاب</span>
-                </button>
-            </div>
-        </div>
+  <header>
+    <div class="brand">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0B5334" stroke-width="2">
+        <path d="M12 2L4 6v6c0 5 3.4 9.4 8 10 4.6-.6 8-5 8-10V6l-8-4z"/>
+      </svg>
+      <span>مدرسة الهاكر الثانوية</span>
     </div>
+    <nav class="nav-links">
+      <a href="#books">الكتب (13)</a>
+      <a href="#contact">تواصل معنا</a>
+    </nav>
+  </header>
 
-    <!-- إشعار Toast -->
-    <div id="toast" class="toast" role="status">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4ADE80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="20 6 9 17 4 12"></polyline>
-        </svg>
-        <span id="toast-text">تمت العملية بنجاح</span>
+  <section class="hero">
+    <div class="hero-inner">
+      <div>
+        <h1>الوعي الأمني للمراهقين: تعلّم كيف تحمي نفسك وتفهم عالم الأمن السيبراني</h1>
+        <p>13 كتاباً تعليمياً مجانياً لقراءتها داخل التطبيق أو تنزيلها على جهازك.</p>
+        <a class="btn-light" href="#books">ابدأ بالكتب</a>
+      </div>
+      <svg class="shield" viewBox="0 0 100 100" fill="none">
+        <path d="M50 8L16 22v26c0 22 14.5 41 34 44 19.5-3 34-22 34-44V22L50 8z" fill="#167C4F" stroke="#fff" stroke-width="3"/>
+        <rect x="38" y="45" width="24" height="20" rx="3" fill="#fff"/>
+        <path d="M43 45v-6a7 7 0 0114 0v6" stroke="#fff" stroke-width="3"/>
+      </svg>
     </div>
+  </section>
 
-    <!-- ======================================================================
-         8. المنطق البرمجي والبيانات (JavaScript)
-         ====================================================================== -->
-    <script>
-        // مصفوفة الكتب الـ 13 بالترتيب الدقيق والمحتوى التعليمي لكل كتاب
-        const booksData = [
-            {
-                id: 0,
-                tag: "المقدمة",
-                title: "مقدمة: مدرسة الهاكر الثانوية",
-                desc: "دليل شامل يعرّف بالمشروع ويلخّص الدروس مع مسرد للمصطلحات.",
-                icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>`,
-                chapters: [
-                    {
-                        heading: "ما هي مدرسة الهاكر الثانوية؟",
-                        text: "مدرسة الهاكر الثانوية (Hacker Highschool) هو مشروع تعليمي عالمي أطلقته منظمة ISECOM لتزويد الشباب والمراهقين بالمعرفة العملية حول كيفية عمل الشبكات والحواسيب وكيفية حماية أنفسهم من المخاطر الرقمية."
-                    },
-                    {
-                        heading: "المعنى الحقيقي لكلمة هاكر",
-                        text: "في الثقافة التقنية الأصيلة، الهاكر هو الشخص الفضولي الذي يحب استكشاف الأنظمة وفهم طريقة عملها من الداخل لإصلاحها وتطويرها، بخلاف المخربين (Crackers) الذين يستغلون الثغرات لإيذاء الآخرين."
-                    }
-                ],
-                quiz: {
-                    question: "ما هو الهدف الأساسي من مشروع مدرسة الهاكر الثانوية؟",
-                    options: [
-                        "تعليم اختراق حسابات الآخرين",
-                        "نشر الوعي الأمني وفهم عمل الأنظمة لحمايتها",
-                        "بيع برامج حماية مدفوعة"
-                    ],
-                    correctIndex: 1
-                }
-            },
-            {
-                id: 1,
-                tag: "الكتاب 1",
-                title: "أن تكون هاكر",
-                desc: "مهارات التعلم والبحث، ومصادر المعرفة الموثوقة.",
-                icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"></rect><line x1="7" y1="9" x2="17" y2="9"></line><line x1="7" y1="13" x2="13" y2="13"></line></svg>`,
-                chapters: [
-                    {
-                        heading: "التفكير النقدي وحل المشكلات",
-                        text: "تعلّم الأمن السيبراني يبدأ بطرح الأسئلة الصحيحة: كيف يعمل هذا البرنامج؟ ماذا يحدث إذا أرسلنا مدخلات غير متوقعة؟ وكيف نتحقق من صحة المعلومة قبل تصديقها؟"
-                    },
-                    {
-                        heading: "البحث الذكي والتوثيق",
-                        text: "المحترفون يعتمدون على الوثائق الرسمية (RFCs)، أدلة أنظمة التشغيل (Man Pages)، ومصادر البحث العلمي الموثوقة بدلاً من الشائعات المنتشرة على الإنترنت."
-                    }
-                ],
-                quiz: {
-                    question: "ما هي أهم مهارة يجب أن يتحلى بها الباحث الأمني؟",
-                    options: [
-                        "حفظ كلمات المرور عن ظهر قلب",
-                        "التفكير النقدي والبحث في المصادر الموثوقة",
-                        "استخدام أدوات مجهولة المصدر"
-                    ],
-                    correctIndex: 1
-                }
-            },
-            {
-                id: 2,
-                tag: "الكتاب 2",
-                title: "الأوامر الأساسية في لينكس وويندوز",
-                desc: "نافذة الأوامر والطرفية وأهم أوامرها.",
-                icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>`,
-                chapters: [
-                    {
-                        heading: "لماذا نستخدم سطر الأوامر (CLI)؟",
-                        text: "تمنحك واجهة سطر الأوامر تحكماً مباشراً وسريعاً في نظام التشغيل، وتتيح لك أتمتة المهام وفحص الشبكة والملفات بدقة لا توفرها الواجهات الرسومية التقليدية.",
-                        code: "# أوامر أساسية في لينكس وويندوز:\nls -la      # عرض الملفات في لينكس\ndir         # عرض الملفات في ويندوز\nipconfig    # عرض إعدادات الشبكة في ويندوز\nip addr     # عرض إعدادات الشبكة في لينكس"
-                    }
-                ],
-                quiz: {
-                    question: "أي أمر يُستخدم لعرض إعدادات الشبكة وعنوان IP في نظام ويندوز؟",
-                    options: [
-                        "ipconfig",
-                        "mkdir",
-                        "cls"
-                    ],
-                    correctIndex: 0
-                }
-            },
-            {
-                id: 3,
-                tag: "الكتاب 3",
-                title: "المنافذ والبروتوكولات",
-                desc: "نموذج TCP/IP وعناوين IP والمنافذ.",
-                icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="3"></circle><circle cx="5" cy="19" r="3"></circle><circle cx="19" cy="19" r="3"></circle><line x1="12" y1="8" x2="5" y2="16"></line><line x1="12" y1="8" x2="19" y2="16"></line></svg>`,
-                chapters: [
-                    {
-                        heading: "عناوين IP والمنافذ (Ports)",
-                        text: "يعمل عنوان IP كعنوان المنزل الذي يحدد موقع الجهاز على الشبكة، بينما تعمل المنافذ (من 0 إلى 65535) كأبواب مخصصة لكل خدمة؛ مثل المنفذ 80 لتصفح الويب (HTTP) والمنفذ 443 للتصفح المشفر (HTTPS)."
-                    },
-                    {
-                        heading: "الفرق بين TCP و UDP",
-                        text: "بروتوكول TCP يضمن وصول البيانات كاملة وبالترتيب الصحيح (مثل تحميل الملفات)، بينما UDP يركز على السرعة الفائقة دون انتظار تأكيد الوصول (مثل البث المباشر والألعاب)."
-                    }
-                ],
-                quiz: {
-                    question: "ما هو رقم المنفذ القياسي لبروتوكول التصفح الآمن HTTPS؟",
-                    options: [
-                        "21",
-                        "80",
-                        "443"
-                    ],
-                    correctIndex: 2
-                }
-            },
-            {
-                id: 4,
-                tag: "الكتاب 4",
-                title: "الخدمات والاتصالات",
-                desc: "الويب والبريد وFTP وDNS وطرق الاتصال.",
-                icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="7" rx="2"></rect><rect x="2" y="14" width="20" height="7" rx="2"></rect><line x1="6" y1="6.5" x2="6.01" y2="6.5"></line><line x1="6" y1="17.5" x2="6.01" y2="17.5"></line></svg>`,
-                chapters: [
-                    {
-                        heading: "نظام أسماء النطاقات (DNS)",
-                        text: "يعمل DNS كدليل هاتف للإنترنت؛ فهو يحوّل أسماء المواقع التي يسهل على البشر تذكرها (مثل example.com) إلى عناوين IP رقمية تفهمها الحواسيب والموجهات."
-                    },
-                    {
-                        heading: "بروتوكولات نقل الملفات والبريد",
-                        text: "تتنوع خدمات الإنترنت بين نقل الملفات (FTP/SFTP) وإرسال البريد الإلكتروني (SMTP) واستلامه (IMAP/POP3)، ولكل منها قواعد أمان خاصة لحماية البيانات أثناء النقل."
-                    }
-                ],
-                quiz: {
-                    question: "ما هي وظيفة نظام DNS على الإنترنت؟",
-                    options: [
-                        "تشفير كلمات المرور",
-                        "تحويل أسماء النطاقات إلى عناوين IP رقمية",
-                        "حذف الفيروسات من المتصفح"
-                    ],
-                    correctIndex: 1
-                }
-            },
-            {
-                id: 5,
-                tag: "الكتاب 5",
-                title: "تحديد هوية الأنظمة",
-                desc: "Whois وping وفحص المنافذ على جهازك.",
-                icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>`,
-                chapters: [
-                    {
-                        heading: "الاستطلاع وفحص الاتصال",
-                        text: "تساعد أدوات مثل ping و traceroute في معرفة ما إذا كان الخادم متصلاً بالشبكة وقياس زمن الاستجابة، بينما تعرض أداة Whois معلومات تسجيل النطاقات العامة.",
-                        code: "# اختبار الاتصال بجهازك المحلي (Localhost):\nping 127.0.0.1"
-                    }
-                ],
-                quiz: {
-                    question: "إلى ماذا يشير عنوان IP الخاص 127.0.0.1؟",
-                    options: [
-                        "خادم شركة جوجل",
-                        "جهازك المحلي نفسه (Localhost)",
-                        "شبكة الواي فاي العامة"
-                    ],
-                    correctIndex: 1
-                }
-            },
-            {
-                id: 6,
-                tag: "الكتاب 6",
-                title: "البرمجيات الخبيثة",
-                desc: "الفيروسات والديدان وأحصنة طروادة وطرق الدفاع.",
-                icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v4"></path><path d="M12 18v4"></path><path d="M4.93 4.93l2.83 2.83"></path><path d="M16.24 16.24l2.83 2.83"></path><path d="M2 12h4"></path><path d="M18 12h4"></path></svg>`,
-                chapters: [
-                    {
-                        heading: "أنواع البرمجيات الخبيثة (Malware)",
-                        text: "تشمل الفيروسات التي تلتصق بالملفات، والديدان (Worms) التي تنتشر تلقائياً عبر الشبكات، وأحصنة طروادة (Trojans) التي تتخفى في هيئة برامج مفيدة أو ألعاب مجانية."
-                    },
-                    {
-                        heading: "خطوط الدفاع الأساسية",
-                        text: "تحديث نظام التشغيل باستمرار، تجنب تحميل البرامج المقرصنة، واستخدام برامج مكافحة الفيروسات الموثوقة هي أهم وسائل الوقاية."
-                    }
-                ],
-                quiz: {
-                    question: "ما هو البرنامج الخبيث الذي يتنكر في شكل برنامج مفيد أو لعبة؟",
-                    options: [
-                        "حصان طروادة (Trojan Horse)",
-                        "جدار الحماية (Firewall)",
-                        "بروتوكول DNS"
-                    ],
-                    correctIndex: 0
-                }
-            },
-            {
-                id: 7,
-                tag: "الكتاب 7",
-                title: "تحليل الهجمات",
-                desc: "Netstat وكشف التسلل وأنظمة الطُعم.",
-                icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>`,
-                chapters: [
-                    {
-                        heading: "مراقبة الاتصالات النشطة",
-                        text: "تتيح أداة netstat عرض جميع الاتصالات الشبكية المفتوحة على جهازك حالياً، مما يساعد في اكتشاف أي برنامج مشبوه يتواصل مع خوادم خارجية في الخلفية.",
-                        code: "# عرض الاتصالات النشطة والمنافذ المفتوحة:\nnetstat -an"
-                    },
-                    {
-                        heading: "أنظمة الطُعم (Honeypots)",
-                        text: "هي أنظمة مصممة خصيصاً لجذب المهاجمين ودراسة أساليبهم في بيئة معزولة وآمنة دون تعريض الشبكة الحقيقية للخطر."
-                    }
-                ],
-                quiz: {
-                    question: "ما هي فائدة الأمر netstat؟",
-                    options: [
-                        "تسريع بطاقة الرسوميات",
-                        "عرض الاتصالات الشبكية النشطة والمنافذ المفتوحة",
-                        "تغيير خلفية سطح المكتب"
-                    ],
-                    correctIndex: 1
-                }
-            },
-            {
-                id: 8,
-                tag: "الكتاب 8",
-                title: "الأدلة الجنائية الرقمية",
-                desc: "جمع الأدلة وتحليلها وحفظ سلسلة الحيازة.",
-                icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>`,
-                chapters: [
-                    {
-                        heading: "حفظ سلامة الأدلة الرقمية",
-                        text: "عند وقوع حادث أمني، يجب عدم العبث بالجهاز المصاب مباشرة؛ بل يتم أخذ نسخة طبق الأصل (Bit-stream Image) وحساب البصمة الرقمية (Hash) لضمان عدم تغير أي بايت في الدليل."
-                    }
-                ],
-                quiz: {
-                    question: "لماذا نستخدم البصمة الرقمية (Hash) في الأدلة الجنائية الرقمية؟",
-                    options: [
-                        "لضغط حجم الملفات",
-                        "لإثبات أن الدليل الرقمي لم يتعرض لأي تعديل",
-                        "لحذف سجل التصفح"
-                    ],
-                    correctIndex: 1
-                }
-            },
-            {
-                id: 9,
-                tag: "الكتاب 9",
-                title: "أمان البريد الإلكتروني",
-                desc: "التصيد والاحتيال والإرسال والاستلام الآمن.",
-                icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>`,
-                chapters: [
-                    {
-                        heading: "اكتشاف رسائل التصيد (Phishing)",
-                        text: "تعتمد هجمات التصيد على خلق شعور بالاستعجال أو الخوف (مثل: سيتم إغلاق حسابك خلال ساعة!) لدفعك للنقر على روابط مزيفة تسرق بيانات دخولك."
-                    },
-                    {
-                        heading: "التحقق من ترويسة الرسالة",
-                        text: "افحص دائماً عنوان المرسل الحقيقي وتأكد من عدم وجود أخطاء إملائية في اسم النطاق قبل فتح أي مرفق أو رابط."
-                    }
-                ],
-                quiz: {
-                    question: "ما هي العلامة الأبرز لرسائل التصيد الإلكتروني (Phishing)؟",
-                    options: [
-                        "وجود طلب عاجل لإدخال كلمة المرور عبر رابط مشبوه",
-                        "وصول رسالة من صديق معروف",
-                        "تحديث تلقائي للنظام"
-                    ],
-                    correctIndex: 0
-                }
-            },
-            {
-                id: 10,
-                tag: "الكتاب 10",
-                title: "أمان الويب والخصوصية",
-                desc: "ثغرات الويب وSSL وحماية الخصوصية.",
-                icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>`,
-                chapters: [
-                    {
-                        heading: "التشفير عبر HTTPS و SSL/TLS",
-                        text: "يحمي بروتوكول HTTPS البيانات المتبادلة بين متصفحك والموقع من التنصت والتعديل، خاصة عند استخدام شبكات الواي فاي العامة."
-                    },
-                    {
-                        heading: "إدارة ملفات تعريف الارتباط والخصوصية",
-                        text: "تحكم في أذونات المتصفح (الكاميرا، الموقع الجغرافي، ملفات Cookies) ولا تشارك بياناتك الشخصية الحساسة في مواقع غير موثوقة."
-                    }
-                ],
-                quiz: {
-                    question: "ماذا يضمن لك وجود قفل HTTPS في شريط عنوان المتصفح؟",
-                    options: [
-                        "تشفير الاتصال بين متصفحك والموقع",
-                        "أن الموقع مجاني بالكامل",
-                        "زيادة سرعة الإنترنت"
-                    ],
-                    correctIndex: 0
-                }
-            },
-            {
-                id: 11,
-                tag: "الكتاب 11",
-                title: "كلمات المرور",
-                desc: "بناء كلمات قوية وطرق الحماية.",
-                icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path></svg>`,
-                chapters: [
-                    {
-                        heading: "العبارات السرية الطويلة (Passphrases)",
-                        text: "كلما زاد طول كلمة المرور (14 حرفاً فأكثر) وتنوعت رموزها، أصبح تخمينها مستحيلاً عملياً. لا تستخدم أبداً نفس كلمة المرور لأكثر من حساب."
-                    },
-                    {
-                        heading: "المصادقة الثنائية (2FA)",
-                        text: "تفعيل المصادقة الثنائية يضيف طبقة حماية حاسمة تمنع المهاجم من دخول حسابك حتى لو تمكن من معرفة كلمة مرورك."
-                    }
-                ],
-                quiz: {
-                    question: "ما هي أفضل ممارسة لحماية حساباتك المهمة؟",
-                    options: [
-                        "استخدام تاريخ ميلادك ككلمة مرور",
-                        "استخدام كلمة مرور طويلة وفريدة مع تفعيل المصادقة الثنائية (2FA)",
-                        "كتابة كلمة المرور في تعليق عام"
-                    ],
-                    correctIndex: 1
-                }
-            },
-            {
-                id: 12,
-                tag: "الكتاب 12",
-                title: "القانون والأخلاق",
-                desc: "جرائم المعلوماتية والاختراق الأخلاقي.",
-                icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"></path><path d="M5 7h14"></path><path d="M5 7l-3 7h6l-3-7z"></path><path d="M19 7l-3 7h6l-3-7z"></path></svg>`,
-                chapters: [
-                    {
-                        heading: "الفرق بين الاختراق الأخلاقي والجريمة الإلكترونية",
-                        text: "الاختراق الأخلاقي يتم دائماً بموافقة مسبقة وعقد رسمي لتأمين الأنظمة، بينما الدخول غير المصرح به يُعد جريمة معلوماتية يعاقب عليها القانون بصرامة."
-                    },
-                    {
-                        heading: "الإفصاح المسؤول عن الثغرات",
-                        text: "إذا اكتشفت ثغرة أمنية بالصدفة في موقع أو تطبيق، فإن التصرف الأخلاقي هو إبلاغ الجهة المالكة بهدوء دون استغلال الثغرة أو نشرها للعامة."
-                    }
-                ],
-                quiz: {
-                    question: "متى يُعد اختبار الاختراق عملاً قانونياً وأخلاقياً؟",
-                    options: [
-                        "في أي وقت طالما لم يتم حذف ملفات",
-                        "فقط عند الحصول على إذن رسمي وصريح من مالك النظام",
-                        "عند اختبار مواقع المدارس"
-                    ],
-                    correctIndex: 1
-                }
-            }
-        ];
+  <main class="container" id="books">
+    <input id="searchInput" class="search-box" type="search" placeholder="ابحث في الكتب الـ 13 بالعنوان أو الموضوع..." />
+    <div class="grid" id="booksGrid"></div>
+  </main>
 
-        let currentBookIndex = 0;
+  <section class="contact" id="contact">
+    <div style="max-width:1050px;margin:auto;">
+      <h2>تواصل معنا</h2>
+      <p style="color:#4B5563;">للاقتراحات أو للإبلاغ عن رابط أو كتاب لا يعمل.</p>
+      <div class="contact-grid">
+        <div class="c-card"><div style="font-size:12px;color:#4B5563;">الاسم</div><strong>يونس دريسي</strong></div>
+        <div class="c-card"><div style="font-size:12px;color:#4B5563;">الهاتف</div><strong dir="ltr">+213659105816</strong></div>
+        <div class="c-card"><div style="font-size:12px;color:#4B5563;">البريد الإلكتروني</div><strong>drysyywnsalhqyqy@gmail.com</strong></div>
+      </div>
+    </div>
+  </section>
 
-        // عرض البطاقات في الشبكة
-        function renderBooks(filterText = "") {
-            const grid = document.getElementById("books-grid");
-            const emptyMsg = document.getElementById("empty-search");
-            const query = filterText.trim().toLowerCase();
+  <footer>
+    <div style="max-width:1050px;margin:auto;">
+      <p><strong>مدرسة الهاكر الثانوية</strong> - مواد تعليمية من مشروع ISECOM (hackerhighschool.org).</p>
+      <p style="opacity:0.88;margin-top:6px;">المواد مفتوحة للاستخدام غير التجاري مع طلاب المدارس والتعليم المنزلي، والمشروع تعليمي ولا يتحمل المسؤولية عن إساءة استخدام المعلومات.</p>
+    </div>
+  </footer>
 
-            const filtered = booksData.filter(book =>
-                book.title.toLowerCase().includes(query) ||
-                book.tag.toLowerCase().includes(query) ||
-                book.desc.toLowerCase().includes(query)
-            );
-
-            if (filtered.length === 0) {
-                grid.innerHTML = "";
-                emptyMsg.style.display = "block";
-                return;
-            }
-
-            emptyMsg.style.display = "none";
-            grid.innerHTML = filtered.map(book => `
-                <article class="book-card">
-                    <div>
-                        <div class="book-card-top">
-                            <div class="book-meta">
-                                <span class="book-tag">${book.tag}</span>
-                                <h3 class="book-title">${book.title}</h3>
-                            </div>
-                            <div class="book-icon-box" aria-hidden="true">
-                                ${book.icon}
-                            </div>
-                        </div>
-                        <p class="book-desc">${book.desc}</p>
-                    </div>
-
-                    <div class="book-actions">
-                        <button type="button" class="btn-read" onclick="openReader(${book.id})">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                            </svg>
-                            <span>اطلاع</span>
-                        </button>
-                        <button type="button" class="btn-download" onclick="downloadBook(${book.id})">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                <polyline points="7 10 12 15 17 10"></polyline>
-                                <line x1="12" y1="15" x2="12" y2="3"></line>
-                            </svg>
-                            <span>تحميل</span>
-                        </button>
-                    </div>
-                </article>
-            `).join("");
-        }
-
-        // فتح نافذة القراءة التفاعلية
-        function openReader(bookId) {
-            currentBookIndex = booksData.findIndex(b => b.id === bookId);
-            if (currentBookIndex === -1) currentBookIndex = 0;
-
-            const book = booksData[currentBookIndex];
-            document.getElementById("modal-tag").textContent = book.tag;
-            document.getElementById("modal-title").textContent = book.title;
-
-            const chaptersHtml = book.chapters.map(ch => `
-                <div class="chapter-box">
-                    <h4>${ch.heading}</h4>
-                    <p>${ch.text}</p>
-                    ${ch.code ? `<pre class="code-snippet">${ch.code}</pre>` : ""}
-                </div>
-            `).join("");
-
-            const quizHtml = `
-                <div class="quiz-box">
-                    <div class="quiz-title">اختبر فهمك السريع:</div>
-                    <div class="quiz-question">${book.quiz.question}</div>
-                    <div class="quiz-options" id="quiz-options">
-                        ${book.quiz.options.map((opt, idx) => `
-                            <button type="button" class="quiz-option-btn" onclick="checkAnswer(${idx}, ${book.quiz.correctIndex}, this)">
-                                ${opt}
-                            </button>
-                        `).join("")}
-                    </div>
-                    <div id="quiz-feedback" class="quiz-feedback"></div>
-                </div>
-            `;
-
-            document.getElementById("modal-body").innerHTML = chaptersHtml + quizHtml;
-            document.getElementById("modal-body").scrollTop = 0;
-
-            document.getElementById("prev-book-btn").disabled = currentBookIndex === 0;
-            document.getElementById("next-book-btn").disabled = currentBookIndex === booksData.length - 1;
-            document.getElementById("modal-download-btn").onclick = () => downloadBook(book.id);
-
-            document.getElementById("reader-modal").classList.add("active");
-            document.body.style.overflow = "hidden";
-        }
-
-        function closeReader() {
-            document.getElementById("reader-modal").classList.remove("active");
-            document.body.style.overflow = "";
-        }
-
-        function navigateBook(direction) {
-            const nextIdx = currentBookIndex + direction;
-            if (nextIdx >= 0 && nextIdx < booksData.length) {
-                openReader(booksData[nextIdx].id);
-            }
-        }
-
-        function checkAnswer(selectedIndex, correctIndex, btnElement) {
-            const allBtns = document.querySelectorAll("#quiz-options .quiz-option-btn");
-            const feedback = document.getElementById("quiz-feedback");
-
-            allBtns.forEach((btn, idx) => {
-                btn.disabled = true;
-                if (idx === correctIndex) {
-                    btn.classList.add("correct");
-                }
-            });
-
-            if (selectedIndex === correctIndex) {
-                feedback.style.color = "#15803D";
-                feedback.textContent = "إجابة صحيحة! أحسنت الفهم.";
-            } else {
-                btnElement.classList.add("wrong");
-                feedback.style.color = "#B91C1C";
-                feedback.textContent = "إجابة غير دقيقة، تم توضيح الإجابة الصحيحة باللون الأخضر.";
-            }
-        }
-
-        // تحميل الكتاب كملف HTML منسق جاهز للقراءة أو الطباعة كـ PDF
-        function downloadBook(bookId) {
-            const book = booksData.find(b => b.id === bookId);
-            if (!book) return;
-
-            const printableContent = `<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<title>${book.tag} - ${book.title}</title>
-<style>
-  body { font-family: Tahoma, Arial, sans-serif; line-height: 1.8; color: #1e293b; max-width: 800px; margin: 40px auto; padding: 20px; }
-  .header { background: #0B5334; color: #fff; padding: 24px; border-radius: 12px; margin-bottom: 24px; }
-  .tag { font-size: 14px; opacity: 0.85; }
-  h1 { margin: 6px 0 0; font-size: 24px; }
-  .chapter { background: #f8fafc; border: 1px solid #e2e8f0; padding: 18px; border-radius: 10px; margin-bottom: 16px; }
-  h2 { color: #0B5334; font-size: 18px; margin-top: 0; }
-  pre { background: #0f172a; color: #38bdf8; padding: 12px; border-radius: 8px; direction: ltr; text-align: left; }
-  .footer { margin-top: 32px; font-size: 13px; color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 12px; }
-</style>
-</head>
-<body>
-  <div class="header">
-    <div class="tag">مدرسة الهاكر الثانوية | ${book.tag}</div>
-    <h1>${book.title}</h1>
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal">
+      <div class="modal-top">
+        <div>
+          <div class="tag" id="modalTag"></div>
+          <h3 id="modalTitle"></h3>
+        </div>
+        <div class="modal-tools">
+          <a id="openExternalBtn" href="#" target="_blank" rel="noopener" style="padding:7px 12px;border-radius:7px;background:#EDF7F1;color:#0B5334;text-decoration:none;font-size:13px;font-weight:600;border:1px solid #0E6B43;">فتح في نافذة جديدة</a>
+          <button id="closeModal" style="flex:none;width:auto;padding:7px 12px;background:#F3F4F6;border-color:#D1D5DB;">إغلاق</button>
+        </div>
+      </div>
+      <div class="fallback-box" id="fallbackBox"></div>
+      <iframe id="lessonFrame" class="reader-frame" title="قراءة الدرس"></iframe>
+    </div>
   </div>
-  <p><strong>ملخص الكتاب:</strong> ${book.desc}</p>
-  ${book.chapters.map(ch => `
-    <div class="chapter">
-      <h2>${ch.heading}</h2>
-      <p>${ch.text}</p>
-      ${ch.code ? `<pre>${ch.code}</pre>` : ""}
-    </div>
-  `).join("")}
-  <div class="footer">مواد تعليمية مفتوحة من مشروع مدرسة الهاكر الثانوية (ISECOM) - للاستخدام التعليمي غير التجاري.</div>
-</body>
-</html>`;
 
-            const blob = new Blob([printableContent], { type: "text/html;charset=utf-8" });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement("a");
-            link.href = url;
-            link.download = `${book.tag.replace(/\s+/g, "_")}_${book.title.replace(/[:\s]+/g, "_")}.html`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
+  <script>
+    const LESSONS_DIR = "lessons";
 
-            showToast(`بدأ تحميل: ${book.title}`);
-        }
+    const BOOKS = [
+      {
+        num: "المقدمة",
+        title: "مقدمة: مدرسة الهاكر الثانوية",
+        summary: "دليل شامل يعرّف بالمشروع ويلخص الدروس مع مسرد للمصطلحات.",
+        file: "مدرسة الهاكر الثانوية - الوعي الأمني للمراهقين.html"
+      },
+      {
+        num: "الكتاب 1",
+        title: "أن تكون هاكر",
+        summary: "مهارات التعلّم والبحث ومصادر المعرفة الموثوقة.",
+        file: "الدرس 1_ان تكون هاكر - مدرسة الهاكر الثانوية.html"
+      },
+      {
+        num: "الكتاب 2",
+        title: "الأوامر الأساسية في لينكس وويندوز",
+        summary: "نافذة الأوامر والطرفية وأهم أوامرها.",
+        file: "الدرس 2_الأوامر الأساسية في لينكس وويندوز - مدرسة الهاكر الثانوية.html"
+      },
+      {
+        num: "الكتاب 3",
+        title: "المنافذ والبروتوكولات",
+        summary: "نموذج TCP/IP وعناوين IP والمنافذ.",
+        file: "الدرس 3_المنافذ والبروتوكولات - مدرسة الهاكر الثانوية.html"
+      },
+      {
+        num: "الكتاب 4",
+        title: "الخدمات والاتصالات",
+        summary: "الويب والبريد وDNS وFTP وطرق الاتصال.",
+        file: "الدرس 4_الخدمات والاتصالات - مدرسة الهاكر الثانوية.html"
+      },
+      {
+        num: "الكتاب 5",
+        title: "تحديد هوية الأنظمة",
+        summary: "Whois وping وفحص المنافذ على جهازك.",
+        file: "الدرس 5_تحديد هوية الأنظمة - مدرسة الهاكر الثانوية.html"
+      },
+      {
+        num: "الكتاب 6",
+        title: "البرمجيات الخبيثة",
+        summary: "الفيروسات والديدان وأحصنة طروادة وطرق الدفاع.",
+        file: "الدرس 6_البرمجيات الخبيثة - مدرسة الهاكر الثانوية.html"
+      },
+      {
+        num: "الكتاب 7",
+        title: "تحليل الهجمات",
+        summary: "Netstat وكشف التسلل وأنظمة الطُعم.",
+        file: "الدرس 7_تحليل الهجمات - مدرسة الهاكر الثانوية.html"
+      },
+      {
+        num: "الكتاب 8",
+        title: "الأدلة الجنائية الرقمية",
+        summary: "جمع الأدلة وتحليلها وحفظ سلسلة الحيازة.",
+        file: "الدرس 8_الأدلة الجنائية الرقمية - مدرسة الهاكر الثانوية.html"
+      },
+      {
+        num: "الكتاب 9",
+        title: "أمان البريد الإلكتروني",
+        summary: "التصيّد والاحتيال والإرسال والاستلام الآمن.",
+        file: "الدرس 9_أمان البريد الإلكتروني - مدرسة الهاكر الثانوية.html"
+      },
+      {
+        num: "الكتاب 10",
+        title: "أمان الويب والخصوصية",
+        summary: "ثغرات الويب وSSL وحماية الخصوصية.",
+        file: "الدرس 10_أمان الويب والخصوصية - مدرسة الهاكر الثانوية.html"
+      },
+      {
+        num: "الكتاب 11",
+        title: "كلمات المرور",
+        summary: "بناء كلمات قوية وطرق الحماية.",
+        file: "الدرس 11_كلمات المرور - مدرسة الهاكر الثانوية.html"
+      },
+      {
+        num: "الكتاب 12",
+        title: "القانون والأخلاق",
+        summary: "جرائم المعلوماتية والاختراق الأخلاقي.",
+        file: "الدرس 12_القوانين والأخلاقيات المتعلقة بالإنترنت - مدرسة الهاكر الثانوية.html"
+      }
+    ];
 
-        // نسخ النصوص مع إشعار Toast
-        function copyText(value, message) {
-            const temp = document.createElement("input");
-            temp.value = value;
-            document.body.appendChild(temp);
-            temp.select();
-            try {
-                document.execCommand("copy");
-                showToast(message);
-            } catch (e) {
-                showToast("تعذر النسخ تلقائياً");
-            }
-            document.body.removeChild(temp);
-        }
+    const grid = document.getElementById("booksGrid");
+    const searchInput = document.getElementById("searchInput");
+    const modalBackdrop = document.getElementById("modalBackdrop");
+    const modalTag = document.getElementById("modalTag");
+    const modalTitle = document.getElementById("modalTitle");
+    const lessonFrame = document.getElementById("lessonFrame");
+    const fallbackBox = document.getElementById("fallbackBox");
+    const openExternalBtn = document.getElementById("openExternalBtn");
 
-        let toastTimer;
-        function showToast(msg) {
-            const toast = document.getElementById("toast");
-            document.getElementById("toast-text").textContent = msg;
-            toast.classList.add("show");
-            clearTimeout(toastTimer);
-            toastTimer = setTimeout(() => {
-                toast.classList.remove("show");
-            }, 3000);
-        }
+    function getLessonPath(book) {
+      return `${LESSONS_DIR}/${encodeURIComponent(book.file)}`;
+    }
 
-        // تهيئة التطبيق عند التحميل
-        window.onload = function () {
-            renderBooks();
+    function renderBooks(filter = "") {
+      const q = filter.trim().toLowerCase();
+      const filtered = BOOKS.filter(b =>
+        b.num.toLowerCase().includes(q) ||
+        b.title.toLowerCase().includes(q) ||
+        b.summary.toLowerCase().includes(q)
+      );
+      grid.innerHTML = filtered.map(b => {
+        const idx = BOOKS.indexOf(b);
+        return `
+          <article class="card">
+            <div>
+              <div class="tag">${b.num}</div>
+              <h3>${b.title}</h3>
+              <p>${b.summary}</p>
+            </div>
+            <div class="actions">
+              <button class="btn-read" onclick="openBook(${idx})">اطلاع</button>
+              <button class="btn-dl" onclick="downloadBook(${idx})">تحميل</button>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
 
-            document.getElementById("search-input").addEventListener("input", function (e) {
-                renderBooks(e.target.value);
-            });
+    window.openBook = function(index) {
+      const book = BOOKS[index];
+      if (!book) return;
+      const path = getLessonPath(book);
+      modalTag.textContent = book.num;
+      modalTitle.textContent = book.title;
+      openExternalBtn.href = path;
+      fallbackBox.style.display = "none";
+      fallbackBox.innerHTML = "";
+      lessonFrame.src = path;
+      modalBackdrop.classList.add("open");
 
-            document.getElementById("reader-modal").addEventListener("click", function (e) {
-                if (e.target === this) {
-                    closeReader();
-                }
-            });
+      fetch(path)
+        .then(res => {
+          if (!res.ok) throw new Error("Not found");
+          return res.text();
+        })
+        .catch(() => {
+          fallbackBox.style.display = "block";
+          fallbackBox.innerHTML = `
+            <strong>تنبيه:</strong> تعذّر العثور على الملف <code>${book.file}</code> داخل مجلد <code>${LESSONS_DIR}/</code>.
+            تأكد من رفع ملف الـ HTML بنفس الاسم داخل <code>www/${LESSONS_DIR}/</code> في مستودع GitHub.
+            <br /><br />
+            <strong>نبذة عن الكتاب:</strong> ${book.summary}
+          `;
+        });
+    };
 
-            document.addEventListener("keydown", function (e) {
-                if (e.key === "Escape") {
-                    closeReader();
-                }
-            });
-        };
-    </script>
+    window.downloadBook = function(index) {
+      const book = BOOKS[index];
+      if (!book) return;
+      const path = getLessonPath(book);
+      const a = document.createElement("a");
+      a.href = path;
+      a.download = book.file;
+      a.click();
+    };
+
+    document.getElementById("closeModal").addEventListener("click", () => {
+      modalBackdrop.classList.remove("open");
+      lessonFrame.src = "about:blank";
+    });
+    modalBackdrop.addEventListener("click", (e) => {
+      if (e.target === modalBackdrop) {
+        modalBackdrop.classList.remove("open");
+        lessonFrame.src = "about:blank";
+      }
+    });
+    searchInput.addEventListener("input", (e) => renderBooks(e.target.value));
+
+    renderBooks();
+  </script>
 </body>
 </html>
